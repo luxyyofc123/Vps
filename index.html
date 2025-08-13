@@ -1,0 +1,422 @@
+<!--
+   Created By Kai
+   Contact https://wa.me/6282126446272
+ 
+   Pake Sc Error? Join Saja Disini dan report menggunakan disqus yang disediakan di desk
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+ 
+   Mau Jasa bikin web? porto? Chat Saja
+   Menerima tapi html css JavaScript aja soalnya yang lain malas
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechBit - VPS, Panels, and Bots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+    }
+    .neon-glow {
+      display: block;
+      border-radius: 10px;
+      box-shadow:
+        0 0 20px rgba(147, 51, 234, 0.7),
+        0 0 40px rgba(59, 130, 246, 0.5),
+        0 0 60px rgba(6, 182, 212, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    .pulse:hover {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes stats {
+      0% { width: 0%; }
+      100% { width: var(--stat-width); }
+    }
+    .stat-bar {
+      animation: stats 2s ease-out forwards;
+    }
+    @keyframes animated-gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    a:focus {
+      outline: 2px solid #9333ea;
+      outline-offset: 2px;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+      box-sizing: border-box;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 20;
+      padding: 16px;
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: #e5e7eb;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    nav a:hover, nav a:focus {
+      color: #9333ea;
+    }
+    nav .logo {
+      font-size: 24px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #9333ea, #3b82f6, #06b6d4);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: animated-gradient 5s ease-in-out infinite;
+    }
+    nav .nav-links a {
+      margin-left: 24px;
+    }
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 60px;
+    }
+    .hero .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    @media (min-width: 768px) {
+      .hero .container {
+        flex-direction: row;
+      }
+    }
+    .hero-content {
+      width: 100%;
+      padding: 32px;
+    }
+    @media (min-width: 768px) {
+      .hero-content {
+        width: 50%;
+      }
+    }
+    .hero h1 {
+      font-size: 36px;
+      font-weight: bold;
+      background: linear-gradient(to right, #9333ea, #06b6d4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 16px;
+    }
+    @media (min-width: 768px) {
+      .hero h1 {
+        font-size: 48px;
+      }
+    }
+    .hero p {
+      font-size: 18px;
+      color: #d1d5db;
+      margin-bottom: 24px;
+    }
+    .hero-buttons a {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 8px;
+      background: linear-gradient(to right, #9333ea, #06b6d4);
+      color: #e5e7eb;
+      text-decoration: none;
+      margin: 8px;
+      transition: background 0.3s ease;
+    }
+    .hero-buttons a:hover {
+      background: linear-gradient(to right, #7e22ce, #0891b2);
+    }
+    .hero-image {
+      width: 100%;
+      padding: 32px;
+    }
+    @media (min-width: 768px) {
+      .hero-image {
+        width: 50%;
+      }
+    }
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .products {
+      padding: 48px 0;
+    }
+    .products h2 {
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 640px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .product-card {
+      padding: 24px;
+      text-align: center;
+      transition: box-shadow 0.3s ease;
+    }
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .product-card h3 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .product-card p {
+      color: #d1d5db;
+      margin-bottom: 16px;
+    }
+    .product-card a {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 8px;
+      background: linear-gradient(to right, #9333ea, #06b6d4);
+      color: #e5e7eb;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .product-card a:hover {
+      background: linear-gradient(to right, #7e22ce, #0891b2);
+    }
+    .testimonials {
+      padding: 48px 0;
+    }
+    .testimonials h2 {
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .testimonial-slider {
+      position: relative;
+      width: 300px;
+      height: 533px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      text-align: center;
+    }
+    .slide img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+    }
+    .slide p {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      color: #fff;
+      background: rgba(0,0,0,0.4);
+      margin: 0;
+      padding: 12px;
+      font-size: 16px;
+    }
+    .slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+    footer {
+      background: #111827;
+      padding: 32px 0;
+      width: 100%;
+      margin: 0;
+    }
+    footer .container {
+      text-align: center;
+    }
+    footer .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+    footer .social-links a {
+      font-size: 24px;
+      color: #e5e7eb;
+      transition: color 0.3s ease;
+    }
+    footer .social-links a:hover,
+    footer .social-links a:focus {
+      color: #9333ea;
+    }
+    footer p {
+      color: #d1d5db;
+    }
+    footer p a {
+      color: #d1d5db;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer p a:hover {
+      color: #9333ea;
+    }
+  </style>
+</head>
+<body>
+  <nav class="glassmorphism" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <a href="index.html" class="logo">TechBit</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Murah/Bergaransi</h1>
+        <p>Selamat datang di halaman resmi kaistore! Temukan produk terbaik dan dukungan terpercaya hanya di sini 🎉.</p>
+      </div>
+      <div class="hero-image">
+        <img src="https://a.eax.moe/aAwBUCeX.png" alt="Futuristic server and code illustration" class="neon-glow" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <div class="products">
+    <div class="container">
+      <h2>Our Products</h2>
+      <div class="products-grid">
+        <div class="product-card glassmorphism neon-border">
+          <img src="https://a.eax.moe/RlZsVkcK.webp" alt="VPS Server">
+          <h3>VPS Servers</h3>
+          <p>“Pilih paket VPS DO sesuai kebutuhan. Performa tinggi, harga ramah, support maksimal!”</p>
+          <a href="vps.html" class="neon-glow pulse">Explore Now</a>
+        </div>
+        <div class="product-card glassmorphism neon-border">
+          <img src="https://a.eax.moe/BZiWZGKr.png" alt="Pterodactyl Panel">
+          <h3>Pterodactyl Panel</h3>
+          <p>“Tingkatkan manajemen server game Anda dengan Pterodactyl Panel. Pilih paket terbaik Anda sekarang juga!”</p>
+          <a href="panel.html" class="neon-glow pulse">Explore Now</a>
+        </div>
+        <div class="product-card glassmorphism neon-border">
+          <img src="https://a.eax.moe/TNvLyrdz.jpg" alt="WhatsApp Bot Script">
+          <h3>WhatsApp Bot Script</h3>
+          <p>Banyak versi pilih sendiri kalau bukan sekarang kapan lagi.</p>
+          <a href="script-bot.html" class="neon-glow pulse">Explore Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonials">
+      <div class="container">
+        <h2>Testimoni Pengguna</h2>
+        <div class="testimonial-slider">
+          <div class="slide active">
+            <img src="https://a.eax.moe/ZuVdPUJk.jpg" alt="Testimoni 1">
+            <p>“Pelayanan sangat memuaskan, server stabil!”</p>
+          </div>
+          <div class="slide">
+            <img src="https://a.eax.moe/ZuVdPUJk.jpg" alt="Testimoni 2">
+            <p>“Script Bot WhatsApp-nya keren banget!”</p>
+          </div>
+          <div class="slide">
+            <img src="https://a.eax.moe/ZuVdPUJk.jpg" alt="Testimoni 3">
+            <p>“Panel mudah digunakan dan support responsif.”</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="social-links">
+        <a href="https://facebook.com"><i class="fab fa-facebook"></i></a>
+        <a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+        <a href="https://linkedin.com"><i class="fab fa-linkedin"></i></a>
+      </div>
+      <p>Contact: <a href="mailto:support@techbit.com">support@techbit.com</a> | +62</p>
+    </div>
+  </footer>
+</body>
+</html>
+
+<!--
+   Created By Kai
+   Contact https://wa.me/6282126446272
+ 
+   Pake Sc Error? Join Saja Disini dan report menggunakan disqus yang disediakan di desk
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+ 
+   Mau Jasa bikin web? porto? Chat Saja
+   Menerima tapi html css JavaScript aja soalnya yang lain malas
+-->
