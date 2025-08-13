@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TechBit - Script Bot WA (QRIS Ready)</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --accent1:#9333ea; --accent2:#06b6d4; --bg1:#1a1a2e; --bg2:#16213e; }
+  *{box-sizing:border-box}
+  body{
+    font-family:'Orbitron',sans-serif;
+    margin:0;padding:0;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    color:#fff;
+  }
+  .container{max-width:1200px;margin:28px auto;padding:20px;}
+  h2{
+    text-align:center;
+    background:linear-gradient(to right,#a855f7,#22d3ee);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    font-size:34px;margin:4px 0 20px;
+  }
+  .header-img{
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 12px;
+    border: 2px solid var(--accent2);
+    box-shadow: 0 0 20px var(--accent2);
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .card{
+    background:rgba(255,255,255,0.06);padding:18px;border-radius:12px;text-align:center;border:1px solid rgba(255,255,255,0.06);
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .card h3{margin:4px 0 8px;font-size:18px}
+  .card p{margin:0;font-weight:700}
+  .card img{
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid var(--accent1);
+  }
+  .btn{
+    display:inline-block;margin-top:12px;padding:10px 16px;border-radius:10px;
+    background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;cursor:pointer;text-decoration:none;
+  }
+  .spoiler-btn{
+    background:transparent;border:1px solid rgba(255,255,255,0.1);color:#fff;padding:8px 12px;border-radius:8px;margin-top:10px;cursor:pointer;
+    font-family:'Orbitron',sans-serif;font-size:12px;
+  }
+  .spoiler-content{
+    display:none;background:rgba(255,255,255,0.04);padding:10px;border-radius:8px;text-align:left;margin-top:10px;
+    font-size:12px;line-height:1.6;
+  }
+  .spoiler-content ul{margin:0;padding:0 0 0 18px}
+  .spoiler-content li{margin-bottom:4px}
+  
+  .popup{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999}
+  .popup-content{width:92%;max-width:480px;background:#0b1220;border-radius:12px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+  .popup h3{text-align:center;margin:0 0 10px}
+  .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+  #qrImage{
+    width:300px; height:auto; max-width:90%;
+    image-rendering:pixelated; image-rendering:-moz-crisp-edges; image-rendering:-webkit-optimize-contrast;
+    border-radius:6px; background:#fff; padding:6px;
+  }
+  .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .close-btn{background:#ef4444;padding:8px 10px;border-radius:8px;color:#fff;cursor:pointer}
+  #apiDetails{margin-top:12px;background:#071026;padding:10px;border-radius:8px;font-size:13px;line-height:1.4;color:#d1d5db}
+  #apiDetails a{color:#60a5fa;word-break:break-all}
+  .config-form{display:none;margin-top:10px;text-align:left}
+  .config-form label{display:block;margin-top:8px;font-size:13px}
+  .config-form input,.config-form select{width:100%;padding:8px;background:#07132a;border:1px solid rgba(255,255,255,0.06);color:#fff;border-radius:6px;margin-top:6px}
+  .muted{color:#94a3b8;font-size:13px}
+  @media(max-width:520px){
+    #qrImage{width:260px}
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Script Bot WA</h2>
+    <div class="grid" id="plansGrid">
+    </div>
+  </div>
+
+  <div class="popup" id="popup">
+    <div class="popup-content" role="dialog" aria-modal="true">
+      <h3 id="popupTitle">Scan QR untuk Membayar</h3>
+      <div class="qr-wrap">
+        <img id="qrImage" src="" alt="QR Code - scan untuk membayar" />
+        <div class="row">
+          <a id="downloadQR" class="btn" href="#" download="qris.png">Unduh Gambar</a>
+          <button class="btn" id="openUrlBtn" style="background:transparent;border:1px solid rgba(255,255,255,0.08)">Buka di Tab</button>
+          <button class="btn" id="okPaidBtn">Sudah Bayar</button>
+          <button class="close-btn" id="closePopupBtn">Tutup</button>
+        </div>
+      </div>
+
+      <div id="apiDetails" aria-live="polite">
+      </div>
+
+      <div class="config-form" id="configForm">
+        <p class="muted">Silakan isi formulir di bawah ini untuk menerima skrip Anda setelah pembayaran dikonfirmasi.</p>
+        <label>Nama Anda</label>
+        <input id="userName" placeholder="Nama Lengkap" />
+        <label>Email</label>
+        <input id="userEmail" type="email" placeholder="contoh@gmail.com" />
+        <label>Nomor WhatsApp</label>
+        <input id="userWA" placeholder="628xxxxxx" />
+        <div style="text-align:right;margin-top:10px">
+          <button class="btn" id="sendConfigBtn">Kirim Detail</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const botImageUrl = 'https://telegra.ph/file/e0b122e3b289b97e168ff.jpg';
+
+const plans = [
+  {name:'SCRIPT BUY OTOMATIS VIA WA', amount:45000},
+  {name:'SCRIPT BUY OTOMATIS VIA TELE', amount:45000},
+  {name:'SCRIPT SIMPEL BOT V6', amount:20000, promo:true},
+  {name:'SCRIPT CPANEL WA/TELE', amount:40000},
+  {name:'SCRIPT GESER STORE', amount:30000},
+  {name:'SCRIPT BUTTON', amount:25000},
+  {name:'SCRIPT MD', amount:25000},
+  {name:'SCRIPT STORE', amount:30000},
+  {name:'SCRIPT INSTAL PANEL', amount:35000},
+  {name:'SCRIPT CAMPURAN', amount:50000},
+  {name:'SCRIPT PRIBADI', amount:55000},
+  {name:'EDIT SCRIPT', amount:25000},
+  {name:'JADIBOT [REQUEST SC]', amount:60000},
+  {name:'SCRIPT LAIN-LAIN/REQUEST', amount:75000}
+];
+
+const planFeatures = {
+    'SCRIPT BUY OTOMATIS VIA WA': ['Integrasi E-commerce', 'Konfirmasi Pembayaran Otomatis', 'Manajemen Stok', 'Resi Otomatis'],
+    'SCRIPT BUY OTOMATIS VIA TELE': ['Sistem Pembelian Otomatis via Telegram', 'Notifikasi Pesanan Real-time', 'Dukungan Multi-metode Pembayaran', 'Pelacakan Status Pesanan'],
+    'SCRIPT SIMPEL BOT V6': ['Fitur Interaktif Dasar', 'Pengenalan Perintah Teks', 'Balasan Otomatis', 'Pengelola Pesan Masuk'],
+    'SCRIPT CPANEL WA/TELE': ['Manajemen Hosting (CPanel) via WA/Tele', 'Monitoring Sumber Daya Server', 'Notifikasi Error/Status Server', 'Manajemen Akun FTP'],
+    'SCRIPT GESER STORE': ['Toko Online WhatsApp', 'Sistem Katalog Produk', 'Manajemen Keranjang Belanja', 'Checkout Cepat'],
+    'SCRIPT BUTTON': ['Interaksi dengan Tombol (Button)', 'Menu Interaktif', 'Respon Lebih Cepat'],
+    'SCRIPT MD': ['Fitur Multi-Device', 'Sinkronisasi Perangkat', 'Penggunaan Bot di Banyak Perangkat'],
+    'SCRIPT STORE': ['Sistem Toko Lengkap', 'Produk Digital/Fisik', 'Manajemen Pesanan', 'Laporan Penjualan'],
+    'SCRIPT INSTAL PANEL': ['Instalasi Otomatis Panel Web Hosting', 'Otomatisasi Tugas Server', 'Manajemen Pengguna'],
+    'SCRIPT CAMPURAN': ['Gabungan Fitur dari Berbagai Bot', 'Kustomisasi Tingkat Lanjut', 'Fleksibilitas Penggunaan'],
+    'SCRIPT PRIBADI': ['Bot WhatsApp untuk Kebutuhan Personal', 'Pengingat Otomatis', 'Manajemen Jadwal', 'Catatan Digital'],
+    'EDIT SCRIPT': ['Layanan Edit Skrip', 'Penambahan Fitur Kustom', 'Perbaikan Bug'],
+    'JADIBOT [REQUEST SC]': ['Layanan Jadibot', 'Sesuai dengan Skrip yang Anda Request'],
+    'SCRIPT LAIN-LAIN/REQUEST': ['Skrip Kustom Sesuai Permintaan Anda', 'Fungsi Unik dan Spesifik']
+};
+
+const grid = document.getElementById('plansGrid');
+plans.forEach(p=>{
+  const card = document.createElement('div');
+  card.className='card';
+  let priceHtml = `<p>Rp ${p.amount.toLocaleString()}</p>`;
+  if(p.promo){
+    priceHtml = `<p style="text-decoration:line-through;color:#9ca3af">Rp 30.000</p><p style="color:#22d3ee;font-size:1.2em">Rp ${p.amount.toLocaleString()}</p>`;
+  }
+  
+  const featuresList = planFeatures[p.name] ? planFeatures[p.name].map(f => `<li>${f}</li>`).join('') : '<li>Fitur belum tersedia</li>';
+  
+  card.innerHTML = `
+    <img src="${botImageUrl}" alt="${p.name} image">
+    <h3>${p.name}</h3>
+    ${priceHtml}
+    <button class="spoiler-btn" onclick="toggleSpoiler(this)">Lihat Fitur</button>
+    <div class="spoiler-content">
+      <ul>${featuresList}</ul>
+    </div>
+    <div class="btn" role="button" tabindex="0">Beli Sekarang</div>
+  `;
+  card.querySelector('.btn').addEventListener('click', ()=> orderNow(p));
+  grid.appendChild(card);
+});
+
+function toggleSpoiler(button) {
+  const content = button.nextElementSibling;
+  content.style.display = content.style.display === 'block' ? 'none' : 'block';
+  button.textContent = content.style.display === 'block' ? 'Sembunyikan Fitur' : 'Lihat Fitur';
+}
+
+const popup = document.getElementById('popup');
+const qrImage = document.getElementById('qrImage');
+const apiDetails = document.getElementById('apiDetails');
+const downloadQR = document.getElementById('downloadQR');
+const openUrlBtn = document.getElementById('openUrlBtn');
+const closePopupBtn = document.getElementById('closePopupBtn');
+const okPaidBtn = document.getElementById('okPaidBtn');
+const configForm = document.getElementById('configForm');
+let countdownInterval = null;
+let currentTransaction = null;
+
+function showPopup(){ popup.style.display='flex'; }
+function hidePopup(){ popup.style.display='none'; clearInterval(countdownInterval); countdownInterval=null; }
+
+function applyQrStyling(imgEl){
+  try{
+    const naturalW = imgEl.naturalWidth || 0;
+    if(naturalW < 250){
+      imgEl.style.width = '300px';
+    } else {
+      imgEl.style.width = '300px';
+    }
+    imgEl.style.imageRendering = 'pixelated';
+  }catch(e){}
+}
+
+async function makeDownloadable(url){
+  try{
+    const res = await fetch(url, {mode:'cors'});
+    if(!res.ok) throw new Error('fetch fail');
+    const blob = await res.blob();
+    const objUrl = URL.createObjectURL(blob);
+    return {ok:true, url:objUrl};
+  }catch(err){
+    return {ok:false, url};
+  }
+}
+
+function startCountdown(expirationISO){
+  if(countdownInterval) clearInterval(countdownInterval);
+  const expire = new Date(expirationISO).getTime();
+  const elId = 'countdownVal';
+  countdownInterval = setInterval(()=>{
+    const now = Date.now();
+    const diff = expire - now;
+    const el = document.getElementById(elId);
+    if(!el) return;
+    if(diff <= 0){
+      el.textContent = 'Expired';
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    } else {
+      const mins = Math.floor(diff / (1000*60));
+      const secs = Math.floor((diff % (1000*60)) / 1000);
+      el.textContent = `${mins}m ${secs}s`;
+    }
+  }, 500);
+}
+
+async function orderNow(plan){
+  apiDetails.innerHTML = `<p class="muted">Membuat QR untuk <b>${plan.name}</b> — Rp ${plan.amount.toLocaleString()} ...</p>`;
+  showPopup();
+
+  const endpoint = `https://berak.vercel.app/orkut/create?amount=${plan.amount}&codeqr=00020101021126570011ID.DANA.WWW011893600915391487938702099148793870303UMI51440014ID.CO.QRIS.WWW0215ID10254060711550303UMI5204549953033605802ID5911TOKO KAIZEL6012Kab. Cirebon61054515663041183`;
+  console.log('Memanggil API dengan URL:', endpoint);
+
+  try{
+    const res = await fetch(endpoint);
+    const data = await res.json();
+    console.log('Respons API diterima:', data);
+//chanell:https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R//
+    if(!data || !data.status || !data.result){
+      const errorMessage = 'Gagal membuat QRIS. Respons tidak valid.';
+      console.error(errorMessage, data);
+      apiDetails.innerHTML = `<p class="muted">${errorMessage} Cek konsol untuk detail lebih lanjut.</p>`;
+      qrImage.src = '';
+      return;
+    }
+//chanell:https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R//
+    currentTransaction = data.result;
+//chanell:https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R//
+    setTimeout(() => {
+        const imgLoader = new Image();
+        imgLoader.crossOrigin = 'anonymous';
+        imgLoader.onload = async function(){
+          qrImage.src = data.result.qrImageUrl;
+          applyQrStyling(qrImage);
+//chanell:https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R//
+          const make = await makeDownloadable(data.result.qrImageUrl);
+          downloadQR.href = make.url;
+          openUrlBtn.onclick = ()=> window.open(data.result.qrImageUrl, '_blank');
+//chanell:https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R//
+          apiDetails.innerHTML = `
+            <p><strong>URL API yang Dipanggil:</strong> <a href="${endpoint}" target="_blank" rel="noreferrer" style="word-break:break-all;">${endpoint}</a></p>
+            <p><strong>Package:</strong> ${plan.name}</p>
+            <p><strong>Transaction ID:</strong> ${data.result.transactionId || '-'} </p>
+            <p><strong>Amount:</strong> Rp ${Number(data.result.amount).toLocaleString()}</p>
+            <p><strong>Expiration Time:</strong> ${new Date(data.result.expirationTime).toLocaleString()}</p>
+            <p><strong>Countdown:</strong> <span id="countdownVal">--</span></p>
+            <p><strong>QR Image URL:</strong> <a href="${data.result.qrImageUrl}" target="_blank" rel="noreferrer" style="word-break:break-all;">${data.result.qrImageUrl}</a></p>
+            <p class="muted">Tips: Pastikan scan sebelum countdown habis. Jika scanner gagal, perbesar ukuran layar atau unduh gambarnya dan scan dari file.</p>
+          `;
+//chanell:https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R//
+          startCountdown(data.result.expirationTime);
+        };
+        imgLoader.onerror = function(){
+          const errorMessage = 'Gagal memuat gambar QR dari server.';
+          console.error(errorMessage, 'URL:', data.result.qrImageUrl);
+          apiDetails.innerHTML = `<p class="muted">${errorMessage} Coba buka link manual:<br/><a href="${data.result.qrImageUrl}" target="_blank" rel="noreferrer">${data.result.qrImageUrl}</a></p>`;
+          qrImage.src = '';
+          openUrlBtn.onclick = ()=> window.open(data.result.qrImageUrl, '_blank');
+          downloadQR.href = data.result.qrImageUrl;
+        };
+        imgLoader.src = data.result.qrImageUrl;
+    }, 1000);
+  }catch(err){
+    console.error('Error saat membuat QRIS:', err);
+    apiDetails.innerHTML = `<p class="muted">Error saat membuat QRIS: ${err.message}. Cek konsol untuk detail.</p>`;
+    qrImage.src = '';
+  }
+}
+//chanell:https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R//
+closePopupBtn.addEventListener('click', ()=>{ hidePopup(); });
+okPaidBtn.addEventListener('click', ()=>{ configForm.style.display='block'; });
+document.getElementById('sendConfigBtn').addEventListener('click', ()=>{
+  const cfg = {
+    name: document.getElementById('userName').value,
+    email: document.getElementById('userEmail').value,
+    wa: document.getElementById('userWA').value,
+    transactionId: currentTransaction ? currentTransaction.transactionId : null
+  };
+  console.log('Kirim detail pelanggan:', cfg);
+  alert('Detail Anda telah terkirim. Kami akan mengirimkan skrip setelah pembayaran dikonfirmasi!');
+  hidePopup();
+});
+//chanell:https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R//
+window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') hidePopup(); });
+</script>
+</body>
+</html>
+
+<!--
+   Created By Kai
+   Contact https://wa.me/6282126446272
+ 
+   Pake Sc Error? Join Saja Disini dan report menggunakan disqus yang disediakan di desk
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+   > https://whatsapp.com/channel/0029VanrndJICVfcrjFr3x2R
+ 
+   Mau Jasa bikin web? porto? Chat Saja
+   Menerima tapi html css JavaScript aja soalnya yang lain malas
+-->
